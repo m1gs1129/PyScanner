@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pyscanner - Enterprise-Grade Local File Analysis & Threat Detection</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        },
+                        slate: {
+                            850: '#0f172a',
+                            900: '#090d16'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .grid-pattern {
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .border-subtle {
+            border-color: #e2e8f0;
+        }
+        .glow-subtle {
+            box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.12);
+        }
+        .drag-active {
+            border-color: #2563eb !important;
+            background-color: #eff6ff !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen grid-pattern">
+
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-brand-600 text-white flex items-center justify-center shadow-md shadow-brand-500/20">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+                        PYSCANNER
+                        <span class="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-emerald-100 text-emerald-800 rounded-full border border-emerald-200">
+                            v2.4 LTS
+                        </span>
+                    </span>
+                    <span class="text-xs text-slate-500 font-medium hidden sm:inline">Enterprise Security Suite</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                <a href="#features" class="hover:text-brand-600 transition-colors">Features</a>
+                <a href="#attachment-hub" class="hover:text-brand-600 transition-colors">Deployment Hub</a>
+                <a href="#scan-preview" class="hover:text-brand-600 transition-colors">Live Demo</a>
+                <a href="#installation" class="hover:text-brand-600 transition-colors">Documentation</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-3">
+                <a href="#attachment-hub" class="px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition-all shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-download text-xs"></i> Download App
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center relative">
+            <!-- Badge Indicator -->
+            <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold mb-8 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Enterprise Ready • Zero Cloud Uploads</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight mb-6">
+                Enterprise-Grade Local File Analysis & <span class="text-brand-600">Threat Detection</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+                Lightweight, privacy-first local antivirus scanner built for rapid file verification without cloud latency, mandatory agent lock-in, or data exposure.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <a href="#attachment-hub" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold text-base transition-all shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download"></i> Download Pyscanner
+                </a>
+                <a href="#scan-preview" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-base border border-slate-300 transition-all shadow-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play text-brand-600"></i> Interactive Demo
+                </a>
+            </div>
+
+            <!-- Metric Badges -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto text-left">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0 font-bold">
+                        <i class="fa-solid fa-shield-check"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900">100% On-Device Analysis</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Files never leave your local workspace</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 font-bold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900">Instant Static Scanning</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Under 50ms per binary evaluation</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0 font-bold">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900">Zero Cloud Telemetry</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Compliant with strict air-gapped policies</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="attachment-hub" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+                <div class="bg-slate-900 text-white px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 text-brand-400 font-mono text-xs uppercase tracking-wider mb-1">
+                            <i class="fa-solid fa-server"></i> Active Deployment Package Hub
+                        </div>
+                        <h2 class="text-2xl font-bold">Custom Executable & Binary Attachment</h2>
+                    </div>
+                    <span class="text-xs bg-slate-800 text-slate-300 font-mono px-3 py-1.5 rounded-lg border border-slate-700">
+                        Admin File Configurator
+                    </span>
+                </div>
+
+                <div class="p-6 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left: Drag & Drop Zone -->
+                    <div class="lg:col-span-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-2">Attach Official Pyscanner File</h3>
+                            <p class="text-xs text-slate-500 mb-4">
+                                Drag and drop your actual compiled installer, script, or executable (`.exe`, `.py`, `.zip`, `.dmg`) below to bind it to the download links for your visitors.
+                            </p>
+
+                            <!-- Drop Target -->
+                            <div id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-brand-500 bg-slate-50 hover:bg-brand-50/30 rounded-xl p-8 text-center transition-all cursor-pointer relative group flex flex-col items-center justify-center min-h-[220px]">
+                                <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileSelect(event)">
+                                <div class="w-12 h-12 rounded-full bg-white shadow-md text-brand-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform border border-slate-100">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800 mb-1">Drop file here or click to browse</h4>
+                                <p class="text-xs text-slate-400">Supports `.exe`, `.py`, `.zip`, `.tar.gz`, `.AppImage`</p>
+                                <span class="mt-4 px-3 py-1 bg-white border border-slate-200 rounded-md text-[11px] font-mono text-slate-600 shadow-2xs">
+                                    Browse Local Machine
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Reset / Default trigger -->
+                        <div class="mt-4 flex justify-between items-center text-xs">
+                            <span class="text-slate-400">Status: <strong id="statusText" class="text-emerald-600">Ready</strong></span>
+                            <button onclick="resetToDefaultFile()" class="text-slate-500 hover:text-slate-800 underline font-medium">
+                                Reset to Default Package
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Active File Details & Download Action -->
+                    <div class="lg:col-span-6 bg-slate-50 rounded-xl p-6 border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+                                <span class="text-xs font-mono font-bold text-slate-500 uppercase">Active Package Metadata</span>
+                                <span id="fileBadge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-brand-100 text-brand-800 border border-brand-200">
+                                    DEFAULT MOCK
+                                </span>
+                            </div>
+
+                            <div class="space-y-3 font-mono text-xs">
+                                <div class="flex justify-between py-1.5 border-b border-slate-200/60">
+                                    <span class="text-slate-500">File Name:</span>
+                                    <span id="metaName" class="font-bold text-slate-900 truncate max-w-[220px]">pyscanner_v2.4.0_installer.exe</span>
+                                </div>
+                                <div class="flex justify-between py-1.5 border-b border-slate-200/60">
+                                    <span class="text-slate-500">File Size:</span>
+                                    <span id="metaSize" class="text-slate-700 font-semibold">18.4 MB</span>
+                                </div>
+                                <div class="flex justify-between py-1.5 border-b border-slate-200/60">
+                                    <span class="text-slate-500">MIME Type:</span>
+                                    <span id="metaType" class="text-slate-700">application/x-msdownload</span>
+                                </div>
+                                <div class="flex justify-between py-1.5 border-b border-slate-200/60">
+                                    <span class="text-slate-500">Last Modified:</span>
+                                    <span id="metaDate" class="text-slate-700">2026-10-13 14:20:00</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block mb-1">SHA-256 Checksum:</span>
+                                    <div id="metaHash" class="p-2.5 bg-white border border-slate-200 rounded font-mono text-[10px] text-slate-800 break-all select-all">
+                                        4f8b92d1c23aef509d818274092b8123fa12830491823bc0918234918234091a
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Download Button -->
+                        <div class="mt-6 pt-4 border-t border-slate-200">
+                            <button id="downloadButton" onclick="triggerDownload()" class="w-full py-3.5 px-6 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm transition-all shadow-md shadow-brand-500/20 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-download"></i>
+                                <span id="btnText">Download Attached Package</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="scan-preview" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Interactive Security Inspection Preview</h2>
+                <p class="text-slate-600 text-sm mt-2 max-w-xl mx-auto">
+                    Test Pyscanner's static analysis engine right in your browser. Drag a file to simulate instant static file scanning.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Drop Box for Live Demo -->
+                <div class="lg:col-span-5 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center">
+                    <div id="demoDropZone" class="border-2 border-dashed border-slate-300 hover:border-brand-500 bg-slate-50 rounded-xl p-8 transition-all cursor-pointer relative">
+                        <input type="file" id="demoFileInput" class="absolute inset-0 opacity-0 cursor-pointer" onchange="runDemoScan(event)">
+                        <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl mb-3">
+                            <i class="fa-solid fa-microscope"></i>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900">Drop Any File for Simulated Analysis</h4>
+                        <p class="text-xs text-slate-500 mt-1">Calculates entropy, checks signatures & calculates risk index</p>
+                    </div>
+                </div>
+
+                <!-- Live Results Console -->
+                <div class="lg:col-span-7 bg-slate-900 text-slate-100 rounded-2xl p-6 shadow-xl border border-slate-800 font-mono text-xs">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                            <span class="ml-2 text-slate-400 text-[11px]">pyscanner-engine-v2.4.1</span>
+                        </div>
+                        <span class="text-emerald-400 font-bold">STATUS: IDLE</span>
+                    </div>
+
+                    <div id="demoOutput" class="space-y-2 h-48 overflow-y-auto pr-2">
+                        <p class="text-slate-500">[INFO] Ready for static file verification...</p>
+                        <p class="text-slate-400">$ pyscanner --version</p>
+                        <p class="text-slate-300">Pyscanner 2.4.0 (x86_64-pc-windows-msvc) [Engine: Pure-Static]</p>
+                        <p class="text-slate-500">Drop a file on the left container to start inspection sequence...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900">Designed for High-Security Environments</h2>
+                <p class="text-slate-600 text-sm mt-2 max-w-2xl mx-auto">
+                    Built specifically for DevSecOps, malware analysts, and enterprise workstations that require immediate inspection without cloud exposure.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center text-lg mb-4 font-bold">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 mb-2">Fast Heuristic Engine</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Multithreaded signature evaluation inspects raw bytes, PE headers, and entropy without causing system lag.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-4 font-bold">
+                        <i class="fa-solid fa-shield-virus"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 mb-2">Zero-Trust Privacy</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Complete air-gap support. Files stay local, avoiding GDPR, HIPAA, or corporate data sovereignty concerns.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-lg mb-4 font-bold">
+                        <i class="fa-solid fa-file-code"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 mb-2">Broad Binary Support</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Inspects PE (.exe/.dll), ELF, Mach-O, Python bytecodes, compressed ZIP archives, and raw scripts seamlessly.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg mb-4 font-bold">
+                        <i class="fa-solid fa-terminal"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 mb-2">Automated JSON Logs</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Structured CLI outputs ready to ingest into Splunk, Datadog, or custom SIEM security pipelines.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">System Compatibility & Quick Start</h2>
+                        <p class="text-xs text-slate-500 mt-1">Run Pyscanner as a standalone executable or python library</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded text-xs font-semibold text-slate-700">Windows</span>
+                        <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded text-xs font-semibold text-slate-700">macOS</span>
+                        <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded text-xs font-semibold text-slate-700">Linux</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Python Package Manager</h4>
+                        <div class="bg-slate-900 text-slate-100 p-3 rounded-lg font-mono text-xs flex justify-between items-center">
+                            <code>pip install pyscanner-cli</code>
+                            <button onclick="navigator.clipboard.writeText('pip install pyscanner-cli')" class="text-slate-400 hover:text-white">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">CLI Execution Command</h4>
+                        <div class="bg-slate-900 text-slate-100 p-3 rounded-lg font-mono text-xs flex justify-between items-center">
+                            <code>pyscanner --scan ./target_file</code>
+                            <button onclick="navigator.clipboard.writeText('pyscanner --scan ./target_file')" class="text-slate-400 hover:text-white">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8 px-4 sm:px-6 lg:px-8 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center space-x-2">
+                <div class="w-5 h-5 rounded bg-brand-600 text-white flex items-center justify-center font-bold text-[10px]">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <span class="font-bold text-slate-800">PYSCANNER SECURITY</span>
+                <span>© 2026 Enterprise Edition. All rights reserved.</span>
+            </div>
+
+            <div class="flex items-center space-x-6">
+                <span class="flex items-center gap-1.5 text-emerald-600 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Operational
+                </span>
+                <a href="#" class="hover:text-slate-800 transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-800 transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-slate-800 transition-colors">Documentation</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // State management for attached download file
+        let activeFile = {
+            name: "pyscanner_v2.4.0_installer.exe",
+            size: "18.4 MB",
+            type: "application/x-msdownload",
+            date: "2026-10-13 14:20:00",
+            hash: "4f8b92d1c23aef509d818274092b8123fa12830491823bc0918234918234091a",
+            blobUrl: null,
+            isCustom: false
+        };
+
+        // Initialize drag & drop listeners for main hub
+        const dropZone = document.getElementById('dropZone');
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-active');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-active');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processUploadedFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                processUploadedFile(files[0]);
+            }
+        }
+
+        async function processUploadedFile(file) {
+            document.getElementById('statusText').innerText = "Processing file...";
+            
+            // Format size
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+            const fileType = file.type || "application/octet-stream";
+            const lastMod = new Date(file.lastModified).toISOString().replace('T', ' ').substring(0, 19);
+
+            // Compute actual SHA-256 using browser Web Crypto API
+            let hashHex = "Calculating...";
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            } catch (err) {
+                hashHex = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+            }
+
+            activeFile = {
+                name: file.name,
+                size: sizeMB,
+                type: fileType,
+                date: lastMod,
+                hash: hashHex,
+                blobUrl: URL.createObjectURL(file),
+                isCustom: true
+            };
+
+            updateMetadataUI();
+        }
+
+        function updateMetadataUI() {
+            document.getElementById('metaName').innerText = activeFile.name;
+            document.getElementById('metaSize').innerText = activeFile.size;
+            document.getElementById('metaType').innerText = activeFile.type;
+            document.getElementById('metaDate').innerText = activeFile.date;
+            document.getElementById('metaHash').innerText = activeFile.hash;
+
+            const badge = document.getElementById('fileBadge');
+            const btnText = document.getElementById('btnText');
+            
+            if (activeFile.isCustom) {
+                badge.innerText = "CUSTOM ATTACHED";
+                badge.className = "px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-200";
+                btnText.innerText = `Download ${activeFile.name}`;
+                document.getElementById('statusText').innerText = "Custom File Active";
+            } else {
+                badge.innerText = "DEFAULT MOCK";
+                badge.className = "px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-brand-100 text-brand-800 border border-brand-200";
+                btnText.innerText = "Download Attached Package";
+                document.getElementById('statusText').innerText = "Ready";
+            }
+        }
+
+        function resetToDefaultFile() {
+            activeFile = {
+                name: "pyscanner_v2.4.0_installer.exe",
+                size: "18.4 MB",
+                type: "application/x-msdownload",
+                date: "2026-10-13 14:20:00",
+                hash: "4f8b92d1c23aef509d818274092b8123fa12830491823bc0918234918234091a",
+                blobUrl: null,
+                isCustom: false
+            };
+            document.getElementById('fileInput').value = '';
+            updateMetadataUI();
+        }
+
+        function triggerDownload() {
+            if (activeFile.blobUrl) {
+                const a = document.createElement('a');
+                a.href = activeFile.blobUrl;
+                a.download = activeFile.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                // Generate a mock binary executable payload
+                const mockContent = "# Pyscanner Enterprise Executable Package\nprint('Pyscanner Antivirus initialized successfully.')";
+                const blob = new Blob([mockContent], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = activeFile.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        // Live Demo Scanner Logic
+        async function runDemoScan(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const consoleBox = document.getElementById('demoOutput');
+            consoleBox.innerHTML = `
+                <p class="text-brand-400">$ pyscanner --inspect "${file.name}"</p>
+                <p>[STATIC-ANALYSIS] Reading binary headers...</p>
+            `;
+
+            setTimeout(() => {
+                consoleBox.innerHTML += `<p class="text-slate-300">➜ Size: ${(file.size / 1024).toFixed(1)} KB | MIME: ${file.type || 'binary/raw'}</p>`;
+                consoleBox.scrollTop = consoleBox.scrollHeight;
+            }, 300);
+
+            setTimeout(async () => {
+                let hash = "a1b2c3d4e5f6...";
+                try {
+                    const buffer = await file.arrayBuffer();
+                    const digest = await crypto.subtle.digest('SHA-256', buffer);
+                    hash = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+                } catch(e) {}
+
+                consoleBox.innerHTML += `<p class="text-slate-300">➜ SHA-256: ${hash.substring(0, 32)}...</p>`;
+                consoleBox.scrollTop = consoleBox.scrollHeight;
+            }, 600);
+
+            setTimeout(() => {
+                const entropy = (Math.random() * (7.8 - 4.2) + 4.2).toFixed(2);
+                consoleBox.innerHTML += `<p class="text-purple-400">➜ Shannon Entropy: ${entropy} (Normal Range)</p>`;
+                consoleBox.innerHTML += `<p class="text-emerald-400 font-bold">[RESULT] CLEAN - 0 Threat Signatures Matched</p>`;
+                consoleBox.scrollTop = consoleBox.scrollHeight;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
